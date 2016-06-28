@@ -3,16 +3,13 @@ status: true
 dependencies:
     module:
         - node
-_core:
-    default_config_hash: e1C4rmrO-3L1I0l2J5EP0LneHwi2Ts398GxTX40rLIM
-id: node.field_event_location
-field_name: field_event_location
+id: node.field_event_capacity
+field_name: field_event_capacity
 entity_type: node
-type: string
+type: integer
 settings:
-    max_length: 255
-    is_ascii: false
-    case_sensitive: false
+    unsigned: false
+    size: normal
 module: core
 locked: false
 cardinality: 1

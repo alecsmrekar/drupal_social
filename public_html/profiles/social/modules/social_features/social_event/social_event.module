@@ -11,6 +11,7 @@ use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
+
 /**
  * Implements hook_form_form_ID_alter().
  *
@@ -31,6 +32,51 @@ function social_event_form_views_exposed_form_alter(&$form, FormStateInterface $
     // @todo make sure exposed form filtering redirects to the proper view
     // page, when views is updated.
     $form['#action'] = '/user/' . $account_uid . '/events';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Set custom validation on event save
+ */
+function social_event_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if($form_id == 'node_event_edit_form') {
+    $form['#validate'][] = 'social_event_node_validation';
+  }
+}
+
+/**
+ * Validate the node_event_edit_form.
+ *
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function social_event_node_validation(&$form, FormStateInterface $form_state) {
+
+  $build_info = $form_state->getBuildInfo();
+  $callback = $build_info['callback_object'];
+  $node = $callback->getEntity();
+  $nid = $node->id();
+
+  $query = \Drupal::entityQuery('event_enrollment')
+    ->condition('field_event', $nid)
+    ->condition('field_enrollment_status', 1);
+  $result = $query->execute();
+  if(empty($result)){
+    $join_count = FALSE;
+  }
+  else {
+    $join_count = count($result);
+  }
+
+  if($join_count){
+    $new_value = $form_state->getValue('field_event_capacity');
+    if(isset($new_value[0]['value']) && !empty($new_value[0]['value'])){
+      if($new_value[0]['value'] < $join_count){
+        $form_state->setErrorByName('field_event_capacity', t('Capacity can not be lower than the number of joined members.'));
+      }
+    }
   }
 }
 

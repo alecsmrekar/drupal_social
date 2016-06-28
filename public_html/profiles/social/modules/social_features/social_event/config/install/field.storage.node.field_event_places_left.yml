@@ -2,16 +2,13 @@ langcode: en
 status: true
 dependencies:
     module:
-        - address
         - node
-_core:
-    default_config_hash: Cw4zMPX5baU9ygQFDu_ym2hMezfWv58GV6wdaAjHUXk
-id: node.field_event_address
-field_name: field_event_address
+id: node.field_event_places_left
+field_name: field_event_places_left
 entity_type: node
-type: address
+type: boolean
 settings: {  }
-module: address
+module: core
 locked: false
 cardinality: 1
 translatable: true

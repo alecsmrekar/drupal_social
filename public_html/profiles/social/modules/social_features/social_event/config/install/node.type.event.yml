@@ -1,12 +1,14 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - menu_ui
+    module:
+        - menu_ui
 third_party_settings:
-  menu_ui:
-    available_menus: {  }
-    parent: ''
+    menu_ui:
+        available_menus: {  }
+        parent: ''
+_core:
+    default_config_hash: nGSVFSlLNe9XuZ2TftJOVVw31b18_r-h20NcseKdYEo
 name: Event
 type: event
 description: ''

@@ -1,11 +1,13 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - field.storage.node.field_event_address
-    - node.type.event
-  module:
-    - address
+    config:
+        - field.storage.node.field_event_address
+        - node.type.event
+    module:
+        - address
+_core:
+    default_config_hash: Er6NkHEBAS3cZebY9dv2n_GPcxU8q1Fj97oOcESu1nw
 id: node.event.field_event_address
 field_name: field_event_address
 entity_type: node
@@ -17,16 +19,16 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  available_countries: {  }
-  fields:
-    locality: locality
-    postalCode: postalCode
-    addressLine1: addressLine1
-    administrativeArea: '0'
-    dependentLocality: '0'
-    sortingCode: '0'
-    addressLine2: '0'
-    organization: '0'
-    recipient: '0'
-  langcode_override: ''
+    available_countries: {  }
+    fields:
+        locality: locality
+        postalCode: postalCode
+        addressLine1: addressLine1
+        administrativeArea: '0'
+        dependentLocality: '0'
+        sortingCode: '0'
+        addressLine2: '0'
+        organization: '0'
+        recipient: '0'
+    langcode_override: ''
 field_type: address

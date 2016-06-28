@@ -1,11 +1,13 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - field.storage.node.field_event_date
-    - node.type.event
-  module:
-    - datetime
+    config:
+        - field.storage.node.field_event_date
+        - node.type.event
+    module:
+        - datetime
+_core:
+    default_config_hash: Uj_NrdSqOUvu2F3CF8TuPdL5AT0N1ZKASOFU5kmadwA
 id: node.event.field_event_date
 field_name: field_event_date
 entity_type: node

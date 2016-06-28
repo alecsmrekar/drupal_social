@@ -111,6 +111,16 @@ class EnrollActionForm extends FormBase implements ContainerInjectionInterface {
 
     $to_enroll_status = '1';
 
+    $capacity = $node->get('field_event_capacity')->getValue();
+    if(!empty($capacity)) {
+      $capacity = $capacity[key($capacity)]['value'];
+    }
+    else{
+      $capacity = FALSE;
+    }
+
+
+
     $enrollments = $this->entityStorage->loadByProperties($conditions);
 
     if ($enrollment = array_pop($enrollments)) {
@@ -127,10 +137,31 @@ class EnrollActionForm extends FormBase implements ContainerInjectionInterface {
       '#value' => $to_enroll_status,
     );
 
-    $form['enroll_for_this_event'] = array(
-      '#type' => 'submit',
-      '#value' => $submit_text,
-    );
+    // Find how many active attendees the event has
+    $query = \Drupal::entityQuery('event_enrollment')
+      ->condition('field_event', $nid)
+      ->condition('field_enrollment_status', 1);
+    $result = $query->execute();
+    if(empty($result)){
+      $join_count = FALSE;
+    }
+    else {
+      $join_count = count($result);
+    }
+
+
+    // If the current user has joined dont hide the submit button when the capacity is reached, otherwise he can not leave the event
+    if (isset($current_enrollment_status) && $current_enrollment_status != 1 && $capacity && $join_count >= $capacity) {
+      $form['enroll_for_this_event'] = array(
+        '#markup' => 'Capacity reached',
+      );
+    }
+    else {    //If the capacity is not reached show the enroll button
+      $form['enroll_for_this_event'] = array(
+        '#type' => 'submit',
+        '#value' => $submit_text,
+      );
+    }
 
     $form['#attributes']['name'] = 'enroll_action_form';
 
@@ -161,6 +192,18 @@ class EnrollActionForm extends FormBase implements ContainerInjectionInterface {
       $form['#attached']['library'][] = 'social_event/form_submit';
     }
 
+    // Calculate if the event is already over
+    $date_end = $node->get('field_event_date_end');
+    $date_end = $date_end->getValue();
+    $date_end = strtotime($date_end[0]['value']);
+    $current_time = REQUEST_TIME;
+
+
+    // Hide the enroll button if the event is over
+    if($current_time >= $date_end){
+      unset($form['enroll_for_this_event']);
+    }
+
     return $form;
   }
 
@@ -183,7 +226,7 @@ class EnrollActionForm extends FormBase implements ContainerInjectionInterface {
             'destination' => $node_url,
           ),
         )
-        );
+      );
       drupal_set_message('Please log in or create a new account so that you can enroll to the event');
       return;
     }
